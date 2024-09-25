@@ -2,23 +2,31 @@ import speech_recognition as sr
 import webbrowser
 import wikipedia
 import os  # for macOS TTS
+import sounddevice as sd
 
 def speak(text):
     os.system(f"say {text}")
 
 def takeCommand():
     r = sr.Recognizer()
-    with sr.Microphone() as source:
-        print("Listening..")
-        audio = r.listen(source)
-        try:
-            print("Recognizing..")
-            query = r.recognize_google(audio, language="en-in")
-            print(f"User said: {query}")
-            return query
-        except Exception as e:
-            print("Sorry, I couldn't recognize your voice. Error:", e)
-            return "Some error occurred"
+
+    # Using sounddevice to record audio from the microphone directly into numpy array
+    print("Listening..")
+    sample_rate = 16000
+    duration = 5  # Seconds of recording
+    audio_data = sd.rec(int(duration * sample_rate), samplerate=sample_rate, channels=1, dtype='int16')
+    sd.wait()  # Wait for the recording to finish
+
+    try:
+        # Converting numpy array data to audio data for speech recognition
+        audio = sr.AudioData(audio_data.tobytes(), sample_rate, 2)
+        print("Recognizing..")
+        query = r.recognize_google(audio, language="en-in")
+        print(f"User said: {query}")
+        return query
+    except Exception as e:
+        print("Sorry, I couldn't recognize your voice. Error:", e)
+        return "Some error occurred"
 
 if __name__ == '__main__':
     s = "Hello, I am an AI bot. How can I help you?"
