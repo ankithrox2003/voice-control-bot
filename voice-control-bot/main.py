@@ -10,15 +10,13 @@ def speak(text):
 def takeCommand():
     r = sr.Recognizer()
 
-    # Using sounddevice to record audio from the microphone directly into numpy array
     print("Listening..")
     sample_rate = 16000
-    duration = 5  # Seconds of recording
+    duration = 5  
     audio_data = sd.rec(int(duration * sample_rate), samplerate=sample_rate, channels=1, dtype='int16')
-    sd.wait()  # Wait for the recording to finish
+    sd.wait()  
 
     try:
-        # Converting numpy array data to audio data for speech recognition
         audio = sr.AudioData(audio_data.tobytes(), sample_rate, 2)
         print("Recognizing..")
         query = r.recognize_google(audio, language="en-in")
