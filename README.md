@@ -8,7 +8,7 @@ pip install SpeechRecognition
 pip install pywin32
 pip install wikipedia-api
 ```
-# If using macOS then insall these:
+# If using macOS then install these:
 ```
 pip install SpeechRecognition
 pip install wikipedia
